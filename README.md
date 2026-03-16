@@ -308,9 +308,8 @@ GitHub:
 https://github.com/suyash700/Rent_Edge
 ```
 
+
+
 ---
 
-# Author
 
-Suyash
-Cloud & DevOps Deployment Project
