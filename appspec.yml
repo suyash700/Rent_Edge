@@ -6,10 +6,6 @@ files:
     destination: /home/ubuntu/rentedge
 
 hooks:
-  ApplicationStop:
-    - location: scripts/stop.sh
-      runas: root
-
   ApplicationStart:
     - location: scripts/start.sh
-      runas: ec2-user
+      runas: ubuntu
