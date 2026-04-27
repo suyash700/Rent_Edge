@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/ec2-user/rentedge
+cd cd /home/ubuntu/rentedge
 
 pkill node || true
 
