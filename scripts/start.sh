@@ -1,6 +1,6 @@
 #!/bin/bash
-cd /home/ubuntu/rentedge
+cd /home/ec2-user/rentedge
 
-pm2 delete rentedge || true
-pm2 start "node dist/index.cjs" --name rentedge
-pm2 save
+pkill node || true
+
+nohup node server.js > app.log 2>&1 &
