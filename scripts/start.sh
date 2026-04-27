@@ -1,6 +1,9 @@
 #!/bin/bash
-cd cd /home/ubuntu/rentedge
+cd /home/ubuntu/rentedge
 
-pkill node || true
+npm install
+npm run build
 
-nohup node server.js > app.log 2>&1 &
+pm2 stop rentedge || true
+pm2 start "node -r dotenv/config dist/index.cjs" --name rentedge
+pm2 save
