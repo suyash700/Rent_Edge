@@ -1,4 +1,4 @@
-<img width="1308" height="1011" alt="Screenshot 2026-04-29 145337" src="https://github.com/user-attachments/assets/edc89adc-2e49-46db-a4fe-259ac78da32c" /><img width="1704" height="965" alt="Screenshot 2026-04-23 192830" src="https://github.com/user-attachments/assets/0c29916f-2840-4ce4-a634-b1934ebe3747" /># 🚀 RentEdge – End-to-End AWS CI/CD Deployment
+# 🚀 RentEdge – End-to-End AWS CI/CD Deployment
 
 ## 📌 Project Overview
 
@@ -59,6 +59,9 @@ We used AWS CloudFormation to provision:
 
 <img width="1912" height="909" alt="Screenshot 2026-04-23 192839" src="https://github.com/user-attachments/assets/2f81887c-0f0f-4b7a-b5b0-0cbc63521f58" />
 
+<img width="1308" height="1011" alt="Screenshot 2026-04-29 145337" src="https://github.com/user-attachments/assets/edc89adc-2e49-46db-a4fe-259ac78da32c" />
+
+<img width="1704" height="965" alt="Screenshot 2026-04-23 192830" src="https://github.com/user-attachments/assets/0c29916f-2840-4ce4-a634-b1934ebe3747" />
 
 <img width="1919" height="964" alt="Screenshot 2026-04-23 193808" src="https://github.com/user-attachments/assets/5c90354a-9179-4efd-aeac-f593ae4c8f44" />
 
