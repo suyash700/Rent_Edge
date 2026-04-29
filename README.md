@@ -1,4 +1,4 @@
-# 🚀 RentEdge – End-to-End AWS CI/CD Deployment
+<img width="1308" height="1011" alt="Screenshot 2026-04-29 145337" src="https://github.com/user-attachments/assets/edc89adc-2e49-46db-a4fe-259ac78da32c" /><img width="1704" height="965" alt="Screenshot 2026-04-23 192830" src="https://github.com/user-attachments/assets/0c29916f-2840-4ce4-a634-b1934ebe3747" /># 🚀 RentEdge – End-to-End AWS CI/CD Deployment
 
 ## 📌 Project Overview
 
@@ -53,6 +53,17 @@ We used AWS CloudFormation to provision:
 * CodeBuild Project
 * CodeDeploy Application & Deployment Group
 
+  <img width="1919" height="918" alt="Screenshot 2026-04-23 192721" src="https://github.com/user-attachments/assets/74dc219c-c46b-4c59-bb33-b950323be92d" />
+
+<img width="1704" height="965" alt="Screenshot 2026-04-23 192830" src="https://github.com/user-attachments/assets/0e406271-5993-4935-b360-4faa82a2ddc6" />
+
+<img width="1912" height="909" alt="Screenshot 2026-04-23 192839" src="https://github.com/user-attachments/assets/2f81887c-0f0f-4b7a-b5b0-0cbc63521f58" />
+
+
+<img width="1919" height="964" alt="Screenshot 2026-04-23 193808" src="https://github.com/user-attachments/assets/5c90354a-9179-4efd-aeac-f593ae4c8f44" />
+
+<img width="1919" height="870" alt="Screenshot 2026-04-23 193652" src="https://github.com/user-attachments/assets/2e179bd6-7850-42dd-92fa-1427a8e9f77a" />
+
 ### Key Components
 
 * **VPC CIDR**: 10.0.0.0/16
@@ -88,6 +99,22 @@ service codedeploy-agent start
 ```bash
 ssh -i key.pem ubuntu@<EC2-IP>
 ```
+
+<img width="1919" height="937" alt="Screenshot 2026-04-23 204500" src="https://github.com/user-attachments/assets/f4cc9b9c-3c66-4bcd-b9c4-de6088aba6db" />
+
+<img width="1912" height="904" alt="Screenshot 2026-04-23 204617" src="https://github.com/user-attachments/assets/e8e06764-a28a-4b92-8f30-67fc85e75075" />
+
+
+<img width="1919" height="909" alt="Screenshot 2026-04-23 204541" src="https://github.com/user-attachments/assets/826c2122-5948-47dd-9e31-f96c61323183" />
+
+
+<img width="1736" height="998" alt="Screenshot 2026-04-29 145327" src="https://github.com/user-attachments/assets/3222ec3c-31be-43cd-9f55-17e0f0d6069b" />
+
+<img width="1271" height="987" alt="Screenshot 2026-04-29 145331" src="https://github.com/user-attachments/assets/e2306722-8d20-4848-b3c8-a12488aa00ae" />
+
+
+<img width="1308" height="1011" alt="Screenshot 2026-04-29 145337" src="https://github.com/user-attachments/assets/fc163ca7-f93c-414c-b769-67c819ae1f0d" />
+
 
 ### 2. Clone Repository
 
@@ -210,6 +237,11 @@ Pipeline Stages:
 1. **Source** → GitHub (CICD branch)
 2. **Build** → CodeBuild
 3. **Deploy** → CodeDeploy
+
+   <img width="1919" height="845" alt="Screenshot 2026-04-28 130839" src="https://github.com/user-attachments/assets/918ca290-4bab-4041-ad3c-7b7d5144a043" />
+
+
+<img width="1919" height="885" alt="Screenshot 2026-04-28 130829" src="https://github.com/user-attachments/assets/fbf25f35-121b-4c69-8195-b31ed89a8658" />
 
 ---
 
