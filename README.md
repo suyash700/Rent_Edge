@@ -1,315 +1,281 @@
-# Rent_Edge
+# 🚀 RentEdge – End-to-End AWS CI/CD Deployment
 
-# RentEdge – Deployment Guide (AWS EC2)
+## 📌 Project Overview
 
-This document describes the complete process used to deploy the **RentEdge application** on an **AWS EC2 Ubuntu server** using **Node.js, PostgreSQL, Drizzle ORM, and PM2**.
+RentEdge is a property management platform that enables landlords and tenants to manage properties, payments, and tenant interactions.
 
----
-
-# Project Overview
-
-RentEdge is a property management platform where landlords and tenants can manage rental properties, payments, and tenant information.
-
-The application was deployed on **AWS EC2** with a **PostgreSQL database** and managed using **PM2** for production.
+This project demonstrates a **production-style deployment** of RentEdge using AWS services with a fully automated **CI/CD pipeline**.
 
 ---
 
-# Tech Stack
+## 🧰 Tech Stack
 
-* Node.js
-* Express.js
-* PostgreSQL
-* Drizzle ORM
-* PM2 (Process Manager)
-* AWS EC2
-* Ubuntu Linux
-* GitHub
+* **Frontend & Backend**: Node.js, Express.js
+* **Database**: PostgreSQL
+* **ORM**: Drizzle ORM
+* **Process Manager**: PM2
+* **Cloud**: AWS (EC2, S3, IAM, CodeBuild, CodeDeploy, CodePipeline)
+* **CI/CD**: GitHub + AWS CodePipeline
 
 ---
 
-# Deployment Architecture
+## 🏗️ Architecture
 
 ```
-User Browser
-     ↓
-AWS EC2 Instance
-     ↓
-PM2 (Process Manager)
-     ↓
-Node.js Express Server
-     ↓
+Developer (GitHub - CICD Branch)
+        ↓
+CodePipeline (Orchestration)
+        ↓
+CodeBuild (Build & Package)
+        ↓
+S3 (Artifacts Storage)
+        ↓
+CodeDeploy (Deployment)
+        ↓
+EC2 Instance (Node.js + PM2)
+        ↓
 PostgreSQL Database
 ```
 
 ---
 
-# 1. Launch EC2 Instance
+## ☁️ Infrastructure Setup (CloudFormation)
 
-Go to **AWS Console → EC2 → Launch Instance**
+We used AWS CloudFormation to provision:
 
-Configuration used:
+* Custom VPC
+* Public Subnet
+* Internet Gateway
+* Route Table
+* EC2 Instance
+* IAM Roles
+* S3 Bucket
+* CodeBuild Project
+* CodeDeploy Application & Deployment Group
 
-* AMI: Ubuntu Server 24.04
-* Instance Type: t2.large
-* Key Pair: Existing SSH key
-* Storage: Default
-* Security Group Rules:
+### Key Components
 
-| Type       | Port |
-| ---------- | ---- |
-| SSH        | 22   |
-| HTTP       | 80   |
-| Custom TCP | 5000 |
+* **VPC CIDR**: 10.0.0.0/16
+* **Public Subnet**: 10.0.1.0/24
+* **Ports Open**:
+
+  * 22 (SSH)
+  * 5000 (Application)
 
 ---
 
-# 2. EC2 User Data Script (Automated Setup)
+## 🖥️ EC2 Setup (User Data Script)
 
-During instance launch, a **User Data script** was used to automatically configure the environment.
-
-```
+```bash
 #!/bin/bash
+apt update -y
+apt install -y ruby wget nodejs npm git
 
-sudo apt update -y
-
-# Install Node.js
-curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
-sudo apt install -y nodejs
-
-# Install Git
-sudo apt install -y git
-
-# Install PostgreSQL
-sudo apt install -y postgresql postgresql-contrib
-
-# Start PostgreSQL
-sudo systemctl start postgresql
-sudo systemctl enable postgresql
-
-# Install PM2 globally
-sudo npm install -g pm2
-```
-
-This script prepares the server with:
-
-* Node.js runtime
-* Git
-* PostgreSQL database
-* PM2 process manager
-
----
-
-# 3. Connect to EC2
-
-```
-ssh -i your-key.pem ubuntu@EC2_PUBLIC_IP
-```
-
-Example:
-
-```
-ssh -i rentedge.pem ubuntu@13.xxx.xxx.xxx
+# Install CodeDeploy Agent
+cd /home/ubuntu
+wget https://aws-codedeploy-ap-south-1.s3.ap-south-1.amazonaws.com/latest/install
+chmod +x install
+./install auto
+service codedeploy-agent start
 ```
 
 ---
 
-# 4. Clone GitHub Repository
+## 📦 Application Deployment (Manual Phase)
 
+### 1. Connect to EC2
+
+```bash
+ssh -i key.pem ubuntu@<EC2-IP>
 ```
+
+### 2. Clone Repository
+
+```bash
 git clone https://github.com/suyash700/Rent_Edge.git
 cd Rent_Edge
 ```
 
----
+### 3. Install Dependencies
 
-# 5. Install Project Dependencies
-
-```
+```bash
 npm install
 ```
 
----
+### 4. Setup PostgreSQL
 
-# 6. Configure PostgreSQL Database
-
-Open PostgreSQL shell:
-
-```
+```bash
 sudo -u postgres psql
-```
-
-Create the application database:
-
-```
 CREATE DATABASE rentedge;
-```
-
-Exit PostgreSQL:
-
-```
 \q
 ```
 
----
+### 5. Configure Environment Variables
 
-# 7. Configure Environment Variables
-
-Create `.env` file:
-
-```
-nano .env
-```
-
-Add:
-
-```
+```env
 DATABASE_URL=postgresql://postgres:password@localhost:5432/rentedge
 PORT=5000
 ```
 
-Save file.
+### 6. Run Migration
 
----
-
-# 8. Run Database Migration (Drizzle)
-
-```
+```bash
 npx drizzle-kit push
 ```
 
-This command creates all database tables from the schema.
+### 7. Build & Run App
 
----
-
-# 9. Build the Application
-
-```
+```bash
 npm run build
-```
-
-This compiles the frontend and backend for production.
-
----
-
-# 10. Start Application
-
-```
 node -r dotenv/config dist/index.cjs
 ```
 
-Server runs on:
+### 8. Run with PM2
 
-```
-http://EC2_PUBLIC_IP:5000
-```
-
----
-
-# 11. Run Application with PM2 (Production Mode)
-
-Install PM2 globally:
-
-```
-sudo npm install -g pm2
-```
-
-Start application:
-
-```
+```bash
 pm2 start "node -r dotenv/config dist/index.cjs" --name rentedge
-```
-
-Save PM2 process:
-
-```
 pm2 save
-```
-
-Enable PM2 auto-start on server reboot:
-
-```
 pm2 startup
 ```
 
 ---
 
-# 12. Verify Application
+## ⚙️ CI/CD Setup
 
-Check running processes:
+### 🔹 1. CodeBuild
+
+* Source: GitHub (CICD branch)
+* Buildspec: `buildspec.yml`
+* Output: S3 artifact
+
+---
+
+### 🔹 2. CodeDeploy
+
+* Deployment Type: In-place
+* Deployment Group: EC2 (tag-based)
+
+#### appspec.yml
+
+```yaml
+version: 0.0
+os: linux
+
+files:
+  - source: /
+    destination: /home/ubuntu/rentedge
+
+hooks:
+  AfterInstall:
+    - location: scripts/permissions.sh
+      runas: root
+
+  ApplicationStart:
+    - location: scripts/start.sh
+      runas: ubuntu
+```
+
+---
+
+### 🔹 3. Deployment Scripts
+
+#### permissions.sh
+
+```bash
+#!/bin/bash
+chown -R ubuntu:ubuntu /home/ubuntu/rentedge
+```
+
+#### start.sh
+
+```bash
+#!/bin/bash
+cd /home/ubuntu/rentedge
+
+npm install
+npm run build
+npx drizzle-kit push || true
+
+pm2 delete all || true
+pm2 start "node -r dotenv/config dist/index.cjs" --name rentedge
+pm2 save
+```
+
+---
+
+### 🔹 4. CodePipeline
+
+Pipeline Stages:
+
+1. **Source** → GitHub (CICD branch)
+2. **Build** → CodeBuild
+3. **Deploy** → CodeDeploy
+
+---
+
+## 🔁 CI/CD Flow
 
 ```
-pm2 list
+git push → CodePipeline triggered
+        → CodeBuild runs
+        → Artifact stored in S3
+        → CodeDeploy deploys to EC2
+        → App restarts via PM2
 ```
 
-View logs:
+---
+
+## 🌐 Access Application
 
 ```
+http://<EC2-PUBLIC-IP>:5000
+```
+
+---
+
+## 🧪 Troubleshooting
+
+### ❌ App not running
+
+```bash
 pm2 logs rentedge
 ```
 
-Monitor processes:
+### ❌ Port issue
 
-```
-pm2 monit
-```
+* Check Security Group (port 5000 open)
 
----
+### ❌ DB error
 
-# 13. Access the Application
-
-Open in browser:
-
-```
-http://EC2_PUBLIC_IP:5000
-```
-
-Example:
-
-```
-http://13.xxx.xxx.xxx:5000
+```bash
+npx drizzle-kit push
 ```
 
 ---
 
-# Security Group Configuration
+## 🔐 Improvements (Future Work)
 
-Ensure the EC2 security group allows:
-
-| Type       | Port |
-| ---------- | ---- |
-| SSH        | 22   |
-| Custom TCP | 5000 |
-
-Source:
-
-```
-0.0.0.0/0
-```
+* Use **Elastic IP** for static access
+* Configure **Nginx + HTTPS (Let's Encrypt)**
+* Move DB to **AWS RDS**
+* Add **Docker & ECS deployment**
+* Implement **Auto Scaling + Load Balancer**
 
 ---
 
-# Future Improvements
+## 🎯 Conclusion
 
-Production improvements that can be implemented:
+This project demonstrates:
 
-* Configure **Nginx Reverse Proxy**
-* Add **HTTPS using Let's Encrypt**
-* Setup **CI/CD using GitHub Actions**
-* Containerize application using **Docker**
-* Deploy database using **AWS RDS**
+* Infrastructure as Code (CloudFormation)
+* Automated CI/CD pipeline using AWS
+* Zero manual deployment workflow
+* Production-ready architecture
 
 ---
 
-# Repository
+## 📎 Repository
 
-GitHub:
-
-```
 https://github.com/suyash700/Rent_Edge
-```
-
-
 
 ---
-
-
